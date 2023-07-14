@@ -1,0 +1,11 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: postgres
+    password: 1367101112abc
+  jpa:
+    database: postgresql
+    show-sql: true
