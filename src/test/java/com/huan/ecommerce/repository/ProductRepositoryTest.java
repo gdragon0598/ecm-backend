@@ -16,14 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductRepositoryTest {
-
     @Autowired
     private ProductRepository productRepository;
     @BeforeEach
     void init() {
 
     }
-
     @Test
     void testFindAll() {
         List<Product> productList=  productRepository.findAll();
