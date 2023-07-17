@@ -1,24 +1,22 @@
 package com.huan.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.List;
 
-@Data
 @Entity
-@Table(name = "category")
-public class Category {
+@Table
+public class Comment {
+
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private String description;
+    @Column(name = "comment_text")
+    private String commentText;
+    private Integer rating;
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;
@@ -33,8 +31,13 @@ public class Category {
     @Column(name = "updated_by")
     private Long updatedBy;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<Product> productList;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 }

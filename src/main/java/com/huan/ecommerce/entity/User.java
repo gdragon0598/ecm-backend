@@ -1,5 +1,8 @@
 package com.huan.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,14 +10,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "user")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "user", schema = "public")
+public class User  {
     @Id
     @GeneratedValue
-    private Long id;
+    protected Long id;
 
     @Column(unique = true)
     private String email;
@@ -27,9 +33,9 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    private Byte sex;
+    private Character sex;
 
-    @Column(name = "date_of birth")
+    @Column(name = "date_of_birth")
     private Date DOB;
 
     @Column(name = "created_at",  nullable = false, updatable = false)
@@ -46,4 +52,25 @@ public class User {
     @Column(name = "updated_by")
     private Long updatedBy;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @JsonBackReference
+    private Address address;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonManagedReference
+    private Set<Role> roleSet;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private List<Order> orderList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private List<Comment> commentList;
 }

@@ -1,24 +1,28 @@
 package com.huan.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.List;
-
 @Data
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "product_image")
+public class ProductImage {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "product_detail_id")
+    @JsonBackReference
+    private ProductDetail productDetail;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;
@@ -32,9 +36,4 @@ public class Category {
 
     @Column(name = "updated_by")
     private Long updatedBy;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<Product> productList;
 }
