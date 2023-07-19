@@ -1,5 +1,6 @@
 package com.huan.ecommerce.service.impl;
 
+import com.huan.ecommerce.entity.Supplier;
 import com.huan.ecommerce.entity.User;
 import com.huan.ecommerce.repository.UserRepository;
 import com.huan.ecommerce.service.IUserService;
@@ -15,4 +16,5 @@ public class UserService implements IUserService {
     public User findUserById(int id) {
         return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
     }
+
 }

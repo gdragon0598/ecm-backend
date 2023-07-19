@@ -1,5 +1,6 @@
 package com.huan.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -37,6 +38,6 @@ public class Address {
     private Long updatedBy;
 
     @OneToOne(mappedBy = "address")
-    @JsonManagedReference
+    @JsonBackReference
     private User user;
 }

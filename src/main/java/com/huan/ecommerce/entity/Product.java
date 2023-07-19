@@ -3,7 +3,9 @@ package com.huan.ecommerce.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,9 +15,11 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "product")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -25,13 +29,11 @@ public class Product {
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    @JsonIgnore
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id")
-    @JsonIgnore
+    @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
     @Column(name = "image_url")
@@ -39,8 +41,9 @@ public class Product {
 
     private Integer sale;
 
-    @Column(name = "supplier_id", nullable = false)
-    private Integer supplierId;
+    @ManyToOne
+    @JoinColumn(name = "supplier_id", nullable = false, referencedColumnName = "user_id")
+    private Supplier supplier;
 
     @Column(name = "is_new")
     private Boolean isNew;
@@ -64,14 +67,11 @@ public class Product {
     private Long updatedBy;
 
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "product")
-    @JsonManagedReference
     private ProductDetail productDetail;
 
     @OneToMany(mappedBy = "product" ,fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<OrderDetail> orderDetailList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    @JsonIgnore
     private List<Comment> commentList;
 }

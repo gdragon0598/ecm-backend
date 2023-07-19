@@ -54,7 +54,7 @@ public class User  {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonManagedReference
     private Address address;
 
     @ManyToMany
@@ -73,4 +73,5 @@ public class User  {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     private List<Comment> commentList;
+
 }
