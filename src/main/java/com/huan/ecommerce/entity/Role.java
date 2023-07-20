@@ -1,24 +1,23 @@
 package com.huan.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
-@Data
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "role")
+public class Role {
+
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
-    private String description;
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;
@@ -33,8 +32,11 @@ public class Category {
     @Column(name = "updated_by")
     private Long updatedBy;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<Product> productList;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleSet")
+    @JsonBackReference
+    Set<User> userSet;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
+    @JsonBackReference
+    List<AccessGroup> accessGroupList;
 }

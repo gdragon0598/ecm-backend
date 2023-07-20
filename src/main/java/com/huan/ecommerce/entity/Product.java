@@ -1,17 +1,18 @@
 package com.huan.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "product")
-
 public class Product {
     @Id
     @GeneratedValue
@@ -25,10 +26,12 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
+    @JsonIgnore
     private Brand brand;
 
     @Column(name = "image_url")
@@ -59,4 +62,16 @@ public class Product {
 
     @Column(name = "updated_by")
     private Long updatedBy;
+
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "product")
+    @JsonManagedReference
+    private ProductDetail productDetail;
+
+    @OneToMany(mappedBy = "product" ,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<OrderDetail> orderDetailList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonIgnore
+    private List<Comment> commentList;
 }
