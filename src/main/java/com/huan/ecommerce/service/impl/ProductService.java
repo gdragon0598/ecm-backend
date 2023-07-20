@@ -10,7 +10,9 @@ import com.huan.ecommerce.repository.SupplierRepository;
 import com.huan.ecommerce.service.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,8 +41,8 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
@@ -50,14 +52,23 @@ public class ProductService implements IProductService {
         return productRepository.save(updatedProduct);
     }
 
+    @Override
+    public Page<Product> findProductByBrandId(int brandId, Pageable pageable) {
+        Page<Product> productCollection = productRepository.findProductsByBrandId(brandId,pageable);
+        if (productCollection.getTotalElements() == 0) {
+            throw new EntityNotFoundException("Cannot find any product, maybe there is no such brand");
+        }
+        return productCollection;
+    }
+
     /**
      * @param categoryId
      * @return
      */
     @Override
-    public Collection<Product> findProductByCategoryId(int categoryId) {
-        Collection<Product> productCollection = productRepository.findProductsByCategoryId(categoryId);
-        if (productCollection.size() == 0) {
+    public Page<Product> findProductByCategoryId(int categoryId, Pageable pageable) {
+        Page<Product> productCollection = productRepository.findProductsByCategoryId(categoryId, pageable);
+        if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such category");
         }
         return productCollection;

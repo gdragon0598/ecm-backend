@@ -17,11 +17,9 @@ public class GlobalExceptionHandler {
         logger.info(e.getMessage());
         return ResponseEntity.status(404).body(e.getMessage());
     }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUnwantedException(Exception e) {
-        logger.error("An unexpected error occurred:", e);
+        logger.trace("An unexpected error occurred: {}", e.getMessage());
         return ResponseEntity.status(500).body("Unknown error");
     }
-
 }
