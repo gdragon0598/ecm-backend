@@ -28,39 +28,24 @@ public class ProductController {
     }
     @PostMapping("")
     public ResponseEntity<String> addProduct(@RequestBody ProductDTO productDTO) {
-        try {
-            Product savedProduct = productService.saveProduct(productDTO);
-            return ResponseEntity.ok("Product added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Product savedProduct = productService.saveProduct(productDTO);
+        return ResponseEntity.ok("Product added successfully");
     }
     @PutMapping("/{productId}/price")
     public ResponseEntity<String> updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
-        try {
             Product updatedProduct = productService.updateProductPrice(productId, newPrice);
             return ResponseEntity.ok("Product price updated successfully. New price: " + updatedProduct.getPrice());
-        } catch (EntityNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable int id) {
-        try{
-            Product product = productService.findProductById(id);
-            return ResponseEntity.ok(product);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Product product = productService.findProductById(id);
+        return ResponseEntity.ok(product);
     }
     @GetMapping("/category")
     public ResponseEntity<Collection<Product>> getProductsByCategoryId(@RequestParam Integer id) {
         Collection<Product> products = productService.findProductByCategoryId(id);
-        if (products.size() > 0)
-            return ResponseEntity.ok(products);
-        else return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(products);
+
     }
 }
 

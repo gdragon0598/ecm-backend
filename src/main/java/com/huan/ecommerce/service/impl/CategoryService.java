@@ -17,7 +17,7 @@ public class CategoryService implements ICategoryService {
      */
     @Override
     public Category findCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() ->new EntityNotFoundException());
+        Category category = categoryRepository.findById(id).orElseThrow(() ->new EntityNotFoundException("Category not found" + id));
         return category;
     }
 }

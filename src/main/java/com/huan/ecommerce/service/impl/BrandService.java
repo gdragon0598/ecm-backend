@@ -18,7 +18,7 @@ public class BrandService implements IBrandService {
      */
     @Override
     public Brand findBrandById(Long id) {
-        Brand brand = brandRepository.findById(id.longValue()).orElseThrow(() ->new EntityNotFoundException());
+        Brand brand = brandRepository.findById(id.longValue()).orElseThrow(() ->new EntityNotFoundException("Brand not found: Brand id " + id));
         return brand;
     }
 }

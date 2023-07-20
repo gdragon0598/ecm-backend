@@ -32,7 +32,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product findProductById(int id) {
-        return productRepository.findById(id).orElseThrow(()->new EntityNotFoundException());
+        return productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Product cannot be found: product ID " + id));
     }
 
     /**
@@ -56,7 +56,11 @@ public class ProductService implements IProductService {
      */
     @Override
     public Collection<Product> findProductByCategoryId(int categoryId) {
-        return productRepository.findProductsByCategoryId(categoryId);
+        Collection<Product> productCollection = productRepository.findProductsByCategoryId(categoryId);
+        if (productCollection.size() == 0) {
+            throw new EntityNotFoundException("Cannot find any product, maybe there is no such category");
+        }
+        return productCollection;
     }
 
     /**

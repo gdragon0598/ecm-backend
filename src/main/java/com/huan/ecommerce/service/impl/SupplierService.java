@@ -21,6 +21,6 @@ public class SupplierService implements ISupplierService {
      */
     @Override
     public Supplier findSupplierById(Long id) {
-        return supplierRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        return supplierRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Supplier cannot be found: supplier ID " + id));
     }
 }
