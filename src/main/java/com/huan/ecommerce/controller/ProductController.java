@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -37,14 +38,14 @@ public class ProductController {
             return ResponseEntity.ok("Product price updated successfully. New price: " + updatedProduct.getPrice());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable int id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable int id) {
         Product product = productService.findProductById(id);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.ok(ProductMapper.mapProductToDTO(product));
     }
     @GetMapping("/category")
-    public ResponseEntity<Collection<Product>> getProductsByCategoryId(@RequestParam Integer id) {
-        Collection<Product> products = productService.findProductByCategoryId(id);
-        return ResponseEntity.ok(products);
+    public ResponseEntity<Collection<ProductDTO>> getProductsByCategoryId(@RequestParam Integer id) {
+        Collection<ProductDTO> productDTOList = productService.findProductByCategoryId(id).stream().map(ProductMapper::mapProductToDTO).toList();
+        return ResponseEntity.ok(productDTOList);
 
     }
 }

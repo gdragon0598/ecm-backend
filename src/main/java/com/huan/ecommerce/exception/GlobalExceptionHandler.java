@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(Exception e) {
+        logger.info(e.getMessage());
         return ResponseEntity.status(404).body(e.getMessage());
     }
 
