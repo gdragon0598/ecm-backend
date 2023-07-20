@@ -25,45 +25,48 @@ public class ProductController {
     private IProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<Page<ProductDTO>> getPageOfProducts(
+    public Page<ProductDTO> getPageOfProducts(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = productService.findAll(pageable);
         Page<ProductDTO> productDTOPage = products.map(ProductMapper::mapProductToDTO);
-        return ResponseEntity.ok(productDTOPage);
+        return productDTOPage;
     }
     @PostMapping("")
-    public ResponseEntity<String> addProduct(@RequestBody ProductDTO productDTO) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public String addProduct(@RequestBody ProductDTO productDTO) {
         Product savedProduct = productService.saveProduct(productDTO);
-        return ResponseEntity.ok("Product added successfully");
+        return "Product added successfully";
     }
     @PutMapping("/{productId}/price")
-    public ResponseEntity<String> updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
+    public String updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
             Product updatedProduct = productService.updateProductPrice(productId, newPrice);
-            return ResponseEntity.ok("Product price updated successfully. New price: " + updatedProduct.getPrice());
+            return "Product price updated successfully. New price: " + updatedProduct.getPrice();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Integer id) {
+    public ProductDTO getProductById(@PathVariable Integer id) {
         Product product = productService.findProductById(id);
-        return ResponseEntity.ok(ProductMapper.mapProductToDTO(product));
+        return ProductMapper.mapProductToDTO(product);
     }
     @GetMapping("/category")
-    public ResponseEntity<Page<ProductDTO>> getPageProductsByCategoryId(@RequestParam Integer id,
-                                                                              @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                              @RequestParam(value = "size", defaultValue = "10") int size) {
+    public Page<ProductDTO> getPageProductsByCategoryId(
+            @RequestParam Integer id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page,size);
         Page<ProductDTO> productDTOPage = productService.findProductByCategoryId(id,pageable).map(ProductMapper::mapProductToDTO);
-        return ResponseEntity.ok(productDTOPage);
+        return productDTOPage;
 
     }
     @GetMapping("/brand")
-    public ResponseEntity<Page<ProductDTO>> getProductsByBrandId(@RequestParam Integer id,
-                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
+    public Page<ProductDTO> getProductsByBrandId(
+            @RequestParam Integer id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page,size);
         Page<ProductDTO> productDTOPage = productService.findProductByBrandId(id, pageable).map(ProductMapper::mapProductToDTO);
-        return ResponseEntity.ok(productDTOPage);
+        return productDTOPage;
     }
 }
 
