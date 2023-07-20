@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
 
-public class ProductMapper {
+public class EntityDTOMapper {
     private static final ModelMapper modelMapper = new ModelMapper();
     public static ProductDTO mapProductToDTO(Product entity) {
         return modelMapper.map(entity, ProductDTO.class);

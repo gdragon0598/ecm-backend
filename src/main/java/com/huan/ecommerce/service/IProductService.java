@@ -9,10 +9,10 @@ import java.util.Collection;
 import java.util.List;
 
 public interface IProductService {
-    public Product findProductById(int id);
-    public Page<Product> findProductByCategoryId(int categoryId, org.springframework.data.domain.Pageable pageable);
-    public Product saveProduct(ProductDTO product);
-    public Page<Product> findAll(Pageable pageable);
-    public Product updateProductPrice(Long productId, double newPrice);
-    public Page<Product> findProductByBrandId(int brandId, Pageable pageable);
+    public ProductDTO findProductById(int id);
+    public Page<ProductDTO> findProductByCategoryId(int categoryId, org.springframework.data.domain.Pageable pageable);
+    public ProductDTO saveProduct(ProductDTO product);
+    public Page<ProductDTO> findAll(Pageable pageable);
+    public ProductDTO updateProductPrice(Long productId, double newPrice);
+    public Page<ProductDTO> findProductByBrandId(int brandId, Pageable pageable);
 }

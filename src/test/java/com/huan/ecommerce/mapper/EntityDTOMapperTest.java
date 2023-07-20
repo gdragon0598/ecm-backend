@@ -11,7 +11,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class ProductMapperTest {
+class EntityDTOMapperTest {
     @Mock
     Category category;
 
@@ -23,7 +23,7 @@ class ProductMapperTest {
     @Mock
     ProductDTO productDTO;
 
-    public ProductMapperTest() {
+    public EntityDTOMapperTest() {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -47,7 +47,7 @@ class ProductMapperTest {
         when(productDTO.getImageUrl()).thenReturn("test url");
         when(productDTO.getSale()).thenReturn(Integer.valueOf(0));
 
-       ProductDTO actualProductDTO = ProductMapper.mapProductToDTO(product);
+       ProductDTO actualProductDTO = EntityDTOMapper.mapProductToDTO(product);
 
        assertEquals(productDTO.getSale(), actualProductDTO.getSale());
         assertEquals(productDTO.getName(), actualProductDTO.getName());
@@ -78,7 +78,7 @@ class ProductMapperTest {
         when(productDTO.getImageUrl()).thenReturn("test url");
         when(productDTO.getSale()).thenReturn(Integer.valueOf(0));
 
-        Product actualProduct = ProductMapper.mapProductDTOToEntity(productDTO);
+        Product actualProduct = EntityDTOMapper.mapProductDTOToEntity(productDTO);
 
         assertEquals(product.getSale(), actualProduct.getSale());
         assertEquals(product.getName(), actualProduct.getName());

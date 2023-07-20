@@ -2,7 +2,7 @@ package com.huan.ecommerce.service.impl;
 
 import com.huan.ecommerce.dto.ProductDTO;
 import com.huan.ecommerce.entity.Product;
-import com.huan.ecommerce.mapper.ProductMapper;
+import com.huan.ecommerce.mapper.EntityDTOMapper;
 import com.huan.ecommerce.repository.BrandRepository;
 import com.huan.ecommerce.repository.CategoryRepository;
 import com.huan.ecommerce.repository.ProductRepository;
@@ -13,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class ProductService implements IProductService {
@@ -33,28 +30,28 @@ public class ProductService implements IProductService {
     private SupplierRepository supplierRepository;
 
     @Override
-    public Product findProductById(int id) {
-        return productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Product cannot be found: product ID " + id));
+    public ProductDTO findProductById(int id) {
+        return EntityDTOMapper.mapProductToDTO(productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Product cannot be found: product ID " + id)));
     }
 
     /**
      * @return
      */
     @Override
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductDTO> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(EntityDTOMapper::mapProductToDTO);
     }
 
     @Override
-    public Product updateProductPrice(Long productId, double newPrice) {
+    public ProductDTO updateProductPrice(Long productId, double newPrice) {
         Product updatedProduct = productRepository.findById(productId.intValue()).orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
         updatedProduct.setPrice(newPrice);
-        return productRepository.save(updatedProduct);
+        return EntityDTOMapper.mapProductToDTO(productRepository.save(updatedProduct));
     }
 
     @Override
-    public Page<Product> findProductByBrandId(int brandId, Pageable pageable) {
-        Page<Product> productCollection = productRepository.findProductsByBrandId(brandId,pageable);
+    public Page<ProductDTO> findProductByBrandId(int brandId, Pageable pageable) {
+        Page<ProductDTO> productCollection = productRepository.findProductsByBrandId(brandId,pageable).map(EntityDTOMapper::mapProductToDTO);
         if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such brand");
         }
@@ -66,8 +63,8 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
-    public Page<Product> findProductByCategoryId(int categoryId, Pageable pageable) {
-        Page<Product> productCollection = productRepository.findProductsByCategoryId(categoryId, pageable);
+    public Page<ProductDTO> findProductByCategoryId(int categoryId, Pageable pageable) {
+        Page<ProductDTO> productCollection = productRepository.findProductsByCategoryId(categoryId, pageable).map(EntityDTOMapper::mapProductToDTO);
         if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such category");
         }
@@ -79,11 +76,11 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
-    public Product saveProduct(ProductDTO product) {
-        Product savedProduct = ProductMapper.mapProductDTOToEntity(product);
+    public ProductDTO saveProduct(ProductDTO product) {
+        Product savedProduct = EntityDTOMapper.mapProductDTOToEntity(product);
         savedProduct.setCategory(categoryRepository.findById(product.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found" + product.getCategoryId())));
         savedProduct.setBrand(brandRepository.findById(product.getBrandId()).orElseThrow(() -> new EntityNotFoundException("Brand not found" + product.getBrandId())));
         savedProduct.setSupplier(supplierRepository.findById(product.getSupplierId()).orElseThrow(() -> new EntityNotFoundException("Supplier not found" + product.getSupplierId())));
-        return productRepository.save(savedProduct);
+        return EntityDTOMapper.mapProductToDTO(productRepository.save(savedProduct));
     }
 }
