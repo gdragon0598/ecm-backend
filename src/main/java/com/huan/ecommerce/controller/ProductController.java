@@ -1,10 +1,8 @@
 package com.huan.ecommerce.controller;
 
-
 import com.huan.ecommerce.dto.ProductDTO;
-import com.huan.ecommerce.entity.Product;
-import com.huan.ecommerce.mapper.EntityDTOMapper;
 import com.huan.ecommerce.service.IProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,45 +21,71 @@ public class ProductController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.findAll(pageable);
-        Page<ProductDTO> productDTOPage = products.map(EntityDTOMapper::mapProductToDTO);
+        Page<ProductDTO> productDTOPage = productService.findAll(pageable);
         return productDTOPage;
     }
     @PostMapping("")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public String addProduct(@RequestBody ProductDTO productDTO) {
-        Product savedProduct = productService.saveProduct(productDTO);
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addProduct(@RequestBody @Valid ProductDTO productDTO) {
+        ProductDTO savedProduct = productService.saveProduct(productDTO);
         return "Product added successfully";
     }
     @PutMapping("/{productId}/price")
     public String updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
-            Product updatedProduct = productService.updateProductPrice(productId, newPrice);
-            return "Product price updated successfully. New price: " + updatedProduct.getPrice();
+        ProductDTO updatedProductDTO = productService.updateProductPrice(productId, newPrice);
+        return "Product price updated successfully. New price: " + updatedProductDTO.getPrice();
     }
     @GetMapping("/{id}")
     public ProductDTO getProductById(@PathVariable Integer id) {
-        Product product = productService.findProductById(id);
-        return EntityDTOMapper.mapProductToDTO(product);
+        ProductDTO productDTO = productService.findProductById(id);
+        return productDTO;
+        //DETAILS
     }
-    @GetMapping("/category")
-    public Page<ProductDTO> getPageProductsByCategoryId(
-            @RequestParam Integer id,
+    @GetMapping("/category/{categoryId}")
+    public Page<ProductDTO> getPageProductsByCategoryId( @PathVariable Long categoryId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page,size);
-        Page<ProductDTO> productDTOPage = productService.findProductByCategoryId(id,pageable).map(EntityDTOMapper::mapProductToDTO);
+        Page<ProductDTO> productDTOPage = productService.findProductByCategoryId(categoryId,pageable);
         return productDTOPage;
-
     }
-    @GetMapping("/brand")
+    @GetMapping("/brand/{brandId}")
     public Page<ProductDTO> getProductsByBrandId(
-            @RequestParam Integer id,
+            @PathVariable Long brandId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page,size);
-        Page<ProductDTO> productDTOPage = productService.findProductByBrandId(id, pageable).map(EntityDTOMapper::mapProductToDTO);
+        Page<ProductDTO> productDTOPage = productService.findProductByBrandId(brandId, pageable);
         return productDTOPage;
     }
+
+    @PutMapping("")
+    public String updateProductById(@RequestParam Integer id, @RequestBody @Valid ProductDTO productDTO) {
+        ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
+        return "Product updated successfully. Product ID: " + updatedProductDTO.getId();
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProductById(@PathVariable Long id) {
+        productService.deleteProductById(id);
+    }
+
+    @GetMapping("/sale")
+    public Page<ProductDTO> getPageOfProductsOrderedAscBySale(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size) {
+        Page<ProductDTO> productDTOPage = productService.findTopProductsBySale(PageRequest.of(page, size));
+        return productDTOPage;
+    }
+
+    @GetMapping("/new")
+    public Page<ProductDTO> getPageOfNewProducts(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size) {
+        Page<ProductDTO> productDTOPage = productService.findPageOfProductsIsNew(PageRequest.of(page, size));
+        return productDTOPage;
+    }
+
 }
 
 

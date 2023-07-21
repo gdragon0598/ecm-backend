@@ -16,4 +16,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT p FROM Product p WHERE p.brand.id = ?1")
     Page<Product> findProductsByBrandId(int brandId, Pageable pageable);
 
+    @Query(value = "SELECT p FROM Product p WHERE p.isNew = true")
+    Page<Product> findProductsByIsNew(Pageable pageable);
+
 }

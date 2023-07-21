@@ -11,6 +11,8 @@ import com.huan.ecommerce.service.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
@@ -50,8 +52,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductDTO> findProductByBrandId(int brandId, Pageable pageable) {
-        Page<ProductDTO> productCollection = productRepository.findProductsByBrandId(brandId,pageable).map(EntityDTOMapper::mapProductToDTO);
+    public Page<ProductDTO> findProductByBrandId(Long brandId, Pageable pageable) {
+        Page<ProductDTO> productCollection = productRepository.findProductsByBrandId(brandId.intValue(),pageable).map(EntityDTOMapper::mapProductToDTO);
         if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such brand");
         }
@@ -59,12 +61,30 @@ public class ProductService implements IProductService {
     }
 
     /**
+     * @param id
+     * @param productDTO
+     * @return
+     */
+    @Override
+    public ProductDTO updateProduct(Integer id, ProductDTO productDTO) {
+        Product updatedProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
+        updatedProduct.setPrice(productDTO.getPrice());
+        updatedProduct.setName(productDTO.getName());
+        updatedProduct.setSale(productDTO.getSale());
+        updatedProduct.setIsNew(productDTO.getIsNew());
+        updatedProduct.setNumberSoldItems(productDTO.getNumberSoldItems());
+        updatedProduct.setTotal(productDTO.getTotal());
+        updatedProduct.setImageUrl(productDTO.getImageUrl());
+        return EntityDTOMapper.mapProductToDTO(productRepository.save(updatedProduct));
+    }
+
+    /**
      * @param categoryId
      * @return
      */
     @Override
-    public Page<ProductDTO> findProductByCategoryId(int categoryId, Pageable pageable) {
-        Page<ProductDTO> productCollection = productRepository.findProductsByCategoryId(categoryId, pageable).map(EntityDTOMapper::mapProductToDTO);
+    public Page<ProductDTO> findProductByCategoryId(Long categoryId, Pageable pageable) {
+        Page<ProductDTO> productCollection = productRepository.findProductsByCategoryId(categoryId.intValue(), pageable).map(EntityDTOMapper::mapProductToDTO);
         if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such category");
         }
@@ -83,4 +103,27 @@ public class ProductService implements IProductService {
         savedProduct.setSupplier(supplierRepository.findById(product.getSupplierId()).orElseThrow(() -> new EntityNotFoundException("Supplier not found" + product.getSupplierId())));
         return EntityDTOMapper.mapProductToDTO(productRepository.save(savedProduct));
     }
+
+    @Override
+    public Page<ProductDTO> findTopProductsBySale(Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "sale"));
+        Page<ProductDTO> productDTOPage = productRepository.findAll(pageable).map(EntityDTOMapper::mapProductToDTO);
+        return productDTOPage;
+    }
+
+    @Override
+    public Page<ProductDTO> findPageOfProductsIsNew(Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
+        Page<ProductDTO> productDTOPage = productRepository.findProductsByIsNew(pageable).map(EntityDTOMapper::mapProductToDTO);
+        return productDTOPage;
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void deleteProductById(Long id) {
+        productRepository.deleteById(id.intValue());
+    }
 }
+

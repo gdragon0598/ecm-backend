@@ -2,6 +2,7 @@ package com.huan.ecommerce.dto;
 
 import com.huan.ecommerce.entity.Address;
 import com.huan.ecommerce.entity.Role;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -10,7 +11,9 @@ import java.util.Set;
 
 @Data
 public class UserDTO  {
-    @NotBlank(message = "Email must not be blank")
+    private Long id;
+
+    @Email(message = "Email không hợp lệ")
     private String email;
 
     @NotBlank(message = "First name must not be blank")
