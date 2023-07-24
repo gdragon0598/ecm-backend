@@ -1,22 +1,25 @@
 package com.huan.ecommerce.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "brand")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Brand {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String name;
     private String description;
 
@@ -34,8 +37,12 @@ public class Brand {
     @Column(name = "updated_by")
     private Long updatedBy;
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+        productList.forEach(product -> product.setBrand(this));
+    }
 }

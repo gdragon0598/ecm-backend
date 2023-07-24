@@ -54,7 +54,6 @@ public class User  {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
-    @JsonBackReference
     private Address address;
 
     @ManyToMany
@@ -63,14 +62,12 @@ public class User  {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @JsonManagedReference
     private Set<Role> roleSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonIgnore
     private List<Order> orderList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonIgnore
     private List<Comment> commentList;
+
 }

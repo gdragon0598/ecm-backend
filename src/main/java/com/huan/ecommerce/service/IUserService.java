@@ -1,7 +1,7 @@
 package com.huan.ecommerce.service;
 
-import com.huan.ecommerce.entity.User;
+import com.huan.ecommerce.dto.UserDTO;
 
 public interface IUserService {
-    public User findUserById(int id);
+    public UserDTO findUserById(int id);
 }
