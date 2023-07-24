@@ -1,13 +1,7 @@
 package com.huan.ecommerce.mapper;
 
-import com.huan.ecommerce.dto.BrandDTO;
-import com.huan.ecommerce.dto.CategoryDTO;
-import com.huan.ecommerce.dto.ProductDTO;
-import com.huan.ecommerce.dto.UserDTO;
-import com.huan.ecommerce.entity.Brand;
-import com.huan.ecommerce.entity.Category;
-import com.huan.ecommerce.entity.Product;
-import com.huan.ecommerce.entity.User;
+import com.huan.ecommerce.dto.*;
+import com.huan.ecommerce.entity.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -28,15 +22,34 @@ public class EntityDTOMapper {
         Product mappedProduct = modelMapper.map(productDTO, Product.class);
         return mappedProduct;
     }
-
     public static UserDTO mapUserToDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
     public static CategoryDTO mapCategoryToDTO(Category category) {
         return modelMapper.map(category, CategoryDTO.class);
     }
-
     public static BrandDTO mapBrandToDTO(Brand brand) {
         return modelMapper.map(brand, BrandDTO.class);
+    }
+    public static ProductDetail mapProductDetailDTOToProductDetail(ProductDetailDTO productDetailDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<ProductDetailDTO, ProductDetail> typeMap = modelMapper.typeMap(ProductDetailDTO.class, ProductDetail.class);
+        typeMap.addMappings(mapper -> mapper.skip(ProductDetail::setProduct));
+        return modelMapper.map(productDetailDTO, ProductDetail.class);
+    }
+
+    public static ProductDetailDTO mapProductDetailToProductDetailDTO(ProductDetail productDetail) {
+        return modelMapper.map(productDetail, ProductDetailDTO.class);
+    }
+
+    public static ProductImage mapProductImageDTOToProductImage(ProductImageDTO productImageDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<ProductImageDTO, ProductImage> typeMap = modelMapper.typeMap(ProductImageDTO.class, ProductImage.class);
+        typeMap.addMappings(mapper -> mapper.skip(ProductImage::setProductDetail));
+        return modelMapper.map(productImageDTO, ProductImage.class);
+    }
+
+    public static ProductImageDTO mapProductImageToProductImageDTO(ProductImage productImage) {
+        return modelMapper.map(productImage, ProductImageDTO.class);
     }
 }
