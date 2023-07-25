@@ -32,9 +32,11 @@ public class ProductDTO {
     @NotNull(message = "supplier id must not be blank")
     private Long supplierId;
 
-
     private Boolean isNew;
     private Integer numberSoldItems;
     private Integer total;
+
+    @NotNull(message = "product detail must not be null")
+    private ProductDetailDTO productDetail;
 
 }

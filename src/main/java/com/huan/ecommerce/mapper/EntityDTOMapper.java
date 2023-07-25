@@ -20,6 +20,8 @@ public class EntityDTOMapper {
                 .addMappings(mapper -> mapper.skip(Product::setSupplier));
 
         Product mappedProduct = modelMapper.map(productDTO, Product.class);
+        mappedProduct.getProductDetail().setProduct(mappedProduct);
+        mappedProduct.getProductDetail().getProductImage().stream().forEach(productImage -> productImage.setProductDetail(mappedProduct.getProductDetail()));
         return mappedProduct;
     }
     public static UserDTO mapUserToDTO(User user) {
