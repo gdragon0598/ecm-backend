@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService implements IProductService {
@@ -45,6 +46,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public ProductDTO updateProductPrice(Long productId, double newPrice) {
         Product updatedProduct = productRepository.findById(productId.intValue()).orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
         updatedProduct.setPrice(newPrice);
@@ -66,6 +68,7 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public ProductDTO updateProduct(Integer id, ProductDTO productDTO) {
         Product updatedProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
         updatedProduct.setPrice(productDTO.getPrice());
@@ -96,6 +99,7 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public ProductDTO saveProduct(ProductDTO product) {
         Product savedProduct = EntityDTOMapper.mapProductDTOToEntity(product);
         savedProduct.setCategory(categoryRepository.findById(product.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found" + product.getCategoryId())));
@@ -122,6 +126,7 @@ public class ProductService implements IProductService {
      * @param id
      */
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void deleteProductById(Long id) {
         productRepository.deleteById(id.intValue());
     }
