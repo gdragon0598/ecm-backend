@@ -5,7 +5,7 @@ import com.huan.ecommerce.entity.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.boot.diagnostics.analyzer.BeanNotOfRequiredTypeFailureAnalyzer;
+
 
 public class EntityDTOMapper {
     private static final ModelMapper modelMapper = new ModelMapper();
@@ -27,31 +27,20 @@ public class EntityDTOMapper {
     public static UserDTO mapUserToDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
+
+    public static User mapUserDTOToUser(UserDTO userDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<UserDTO, User> typeMap = modelMapper.typeMap(UserDTO.class, User.class);
+        typeMap.addMappings(mapper -> mapper.skip(User::setUserRoleSet));
+        User user = modelMapper.map(userDTO, User.class);
+        user.getAddress().setUser(user);
+        return user;
+    }
     public static CategoryDTO mapCategoryToDTO(Category category) {
         return modelMapper.map(category, CategoryDTO.class);
     }
     public static BrandDTO mapBrandToDTO(Brand brand) {
         return modelMapper.map(brand, BrandDTO.class);
     }
-    public static ProductDetail mapProductDetailDTOToProductDetail(ProductDetailDTO productDetailDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        TypeMap<ProductDetailDTO, ProductDetail> typeMap = modelMapper.typeMap(ProductDetailDTO.class, ProductDetail.class);
-        typeMap.addMappings(mapper -> mapper.skip(ProductDetail::setProduct));
-        return modelMapper.map(productDetailDTO, ProductDetail.class);
-    }
 
-    public static ProductDetailDTO mapProductDetailToProductDetailDTO(ProductDetail productDetail) {
-        return modelMapper.map(productDetail, ProductDetailDTO.class);
-    }
-
-    public static ProductImage mapProductImageDTOToProductImage(ProductImageDTO productImageDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        TypeMap<ProductImageDTO, ProductImage> typeMap = modelMapper.typeMap(ProductImageDTO.class, ProductImage.class);
-        typeMap.addMappings(mapper -> mapper.skip(ProductImage::setProductDetail));
-        return modelMapper.map(productImageDTO, ProductImage.class);
-    }
-
-    public static ProductImageDTO mapProductImageToProductImageDTO(ProductImage productImage) {
-        return modelMapper.map(productImage, ProductImageDTO.class);
-    }
 }

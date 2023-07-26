@@ -1,15 +1,16 @@
 package com.huan.ecommerce.controller;
 
 import com.huan.ecommerce.dto.UserDTO;
+import com.huan.ecommerce.dto.UserUpdateDTO;
 import com.huan.ecommerce.service.IUserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private IUserService userService;
@@ -18,4 +19,22 @@ public class UserController {
         UserDTO userDTO = userService.findUserById(id);
         return userDTO;
     }
+    @PostMapping
+    public UserDTO addUser(@RequestBody @Valid UserDTO userDTO) {
+        return userService.saveUser(userDTO);
+    }
+
+    @PutMapping("/{id}")
+    public UserDTO updateUserById(@PathVariable int id, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        return userService.updateUser(id, userUpdateDTO);
+    }
+
+    @GetMapping
+    public Page<UserDTO> getPageOfUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        return userService.getPageOfUsers(PageRequest.of(page, size));
+    }
+
 }
