@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,10 +28,12 @@ public class ProductController {
     }
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<ProductDTO> addProduct(@RequestBody @Valid ProductDTO productDTO) {
         ProductDTO savedProduct = productService.saveProduct(productDTO);
         return ResponseEntity.ok(savedProduct);
     }
+    @Transactional(rollbackFor = Throwable.class)
     @PutMapping("/{productId}/price")
     public ResponseEntity<ProductDTO> updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
         ProductDTO updatedProductDTO = productService.updateProductPrice(productId, newPrice);
@@ -61,12 +64,14 @@ public class ProductController {
     }
 
     @PutMapping("")
+    @Transactional(rollbackFor = Throwable.class)
     public  ResponseEntity<ProductDTO> updateProductById(@RequestParam Integer id, @RequestBody @Valid ProductDTO productDTO) {
         ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
         return  ResponseEntity.ok(updatedProductDTO);
     }
 
     @DeleteMapping("/{id}")
+    @Transactional(rollbackFor = Throwable.class)
     public void deleteProductById(@PathVariable Long id) {
         productService.deleteProductById(id);
     }
