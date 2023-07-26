@@ -15,6 +15,6 @@ public interface IProductService {
     ProductDTO updateProduct(Integer id, ProductDTO productDTO);
     Page<ProductDTO> findTopProductsBySale(Pageable pageable);
     Page<ProductDTO> findPageOfProductsIsNew(Pageable pageable);
-        void deleteProductById(Long id);
+    void deleteProductById(Long id);
 
 }

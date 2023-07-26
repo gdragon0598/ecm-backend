@@ -1,6 +1,5 @@
 package com.huan.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,15 +11,14 @@ import java.sql.Timestamp;
 @Table(name = "product_image")
 public class ProductImage {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "product_detail_id")
-    @JsonBackReference
     private ProductDetail productDetail;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     @Column(name = "created_at",  nullable = false, updatable = false)

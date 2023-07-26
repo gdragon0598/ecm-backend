@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,14 +28,14 @@ public class ProductController {
     }
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addProduct(@RequestBody @Valid ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> addProduct(@RequestBody @Valid ProductDTO productDTO) {
         ProductDTO savedProduct = productService.saveProduct(productDTO);
-        return "Product added successfully";
+        return ResponseEntity.ok(savedProduct);
     }
     @PutMapping("/{productId}/price")
-    public String updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
+    public ResponseEntity<ProductDTO> updateProductPrice(@PathVariable Long productId, @RequestParam double newPrice) {
         ProductDTO updatedProductDTO = productService.updateProductPrice(productId, newPrice);
-        return "Product price updated successfully. New price: " + updatedProductDTO.getPrice();
+        return  ResponseEntity.ok(updatedProductDTO);
     }
     @GetMapping("/{id}")
     public ProductDTO getProductById(@PathVariable Integer id) {
@@ -60,9 +62,9 @@ public class ProductController {
     }
 
     @PutMapping("")
-    public String updateProductById(@RequestParam Integer id, @RequestBody @Valid ProductDTO productDTO) {
+    public  ResponseEntity<ProductDTO> updateProductById(@RequestParam Integer id, @RequestBody @Valid ProductDTO productDTO) {
         ProductDTO updatedProductDTO = productService.updateProduct(id, productDTO);
-        return "Product updated successfully. Product ID: " + updatedProductDTO.getId();
+        return  ResponseEntity.ok(updatedProductDTO);
     }
 
     @DeleteMapping("/{id}")

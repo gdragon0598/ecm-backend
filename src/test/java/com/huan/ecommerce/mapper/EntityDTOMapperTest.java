@@ -23,6 +23,7 @@ class EntityDTOMapperTest {
     @Mock
     ProductDTO productDTO;
 
+
     public EntityDTOMapperTest() {
         MockitoAnnotations.openMocks(this);
     }

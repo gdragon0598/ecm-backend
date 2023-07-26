@@ -1,6 +1,7 @@
 package com.huan.ecommerce.exception;
 
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,5 +33,11 @@ public class GlobalExceptionHandler {
         if (e.getBindingResult().hasErrors())
             return e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return null;
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleEntityExistsException(EntityExistsException e) {
+        return e.getMessage();
     }
 }

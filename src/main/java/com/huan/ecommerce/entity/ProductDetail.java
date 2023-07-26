@@ -1,7 +1,5 @@
 package com.huan.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,16 +13,14 @@ import java.util.List;
 @Table(name = "product_detail")
 public class ProductDetail {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "product_id")
-    @JsonBackReference
+    @JoinColumn(name = "product_id", nullable = false, unique = true)
     private Product product;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productDetail")
-    @JsonManagedReference
     private List<ProductImage> productImage;
 
     private String description;
