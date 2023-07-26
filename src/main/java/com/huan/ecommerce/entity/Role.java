@@ -1,20 +1,21 @@
 package com.huan.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "role")
 public class Role {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -32,11 +33,10 @@ public class Role {
     @Column(name = "updated_by")
     private Long updatedBy;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleSet")
-    @JsonBackReference
-    Set<User> userSet;
+
+    @OneToMany(mappedBy = "primaryKey.role", cascade = CascadeType.ALL)
+    Set<UserRole> userRoleSet = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
-    @JsonBackReference
     List<AccessGroup> accessGroupList;
 }

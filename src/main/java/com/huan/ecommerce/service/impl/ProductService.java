@@ -105,7 +105,8 @@ public class ProductService implements IProductService {
         savedProduct.setCategory(categoryRepository.findById(product.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found" + product.getCategoryId())));
         savedProduct.setBrand(brandRepository.findById(product.getBrandId()).orElseThrow(() -> new EntityNotFoundException("Brand not found" + product.getBrandId())));
         savedProduct.setSupplier(supplierRepository.findById(product.getSupplierId()).orElseThrow(() -> new EntityNotFoundException("Supplier not found" + product.getSupplierId())));
-        return EntityDTOMapper.mapProductToDTO(productRepository.save(savedProduct));
+        savedProduct = productRepository.save(savedProduct);
+        return EntityDTOMapper.mapProductToDTO(savedProduct);
     }
 
     @Override

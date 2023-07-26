@@ -1,8 +1,9 @@
 package com.huan.ecommerce.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
 public class AddressDTO {
     @NotBlank(message = "Street field must not be blank")
     private String street;

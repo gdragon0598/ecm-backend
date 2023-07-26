@@ -2,23 +2,14 @@ package com.huan.ecommerce.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import java.sql.Date;
-import java.util.List;
 
 @Data
-public class UserDTO  {
-    private Long id;
-
-    @Email(message = "Email không hợp lệ")
-    private String email;
-
-    @Length(min = 8)
-    private String password;
-
+public class UserUpdateDTO {
     @NotBlank(message = "First name must not be blank")
     private String firstName;
 
@@ -35,6 +26,4 @@ public class UserDTO  {
     @NotNull(message = "Address field must not be blank")
     private AddressDTO address;
 
-    @NotEmpty(message = "User must have at least one role")
-    private List<Long> roleIdList;
 }

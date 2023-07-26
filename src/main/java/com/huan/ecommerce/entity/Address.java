@@ -1,8 +1,7 @@
 package com.huan.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,7 +12,7 @@ import java.sql.Timestamp;
 @Table(name = "address")
 public class Address {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String street;
     private String city;
@@ -37,6 +36,5 @@ public class Address {
     private Long updatedBy;
 
     @OneToOne(mappedBy = "address")
-    @JsonBackReference
     private User user;
 }
