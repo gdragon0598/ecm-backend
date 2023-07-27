@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "customer")
@@ -13,6 +15,10 @@ import java.sql.Timestamp;
 public class Customer extends User {
     @Column(name = "number_order")
     private Integer numberOrder;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Order> orderList;
+
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;

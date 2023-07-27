@@ -43,4 +43,17 @@ public class EntityDTOMapper {
         return modelMapper.map(brand, BrandDTO.class);
     }
 
+    public static Order mapOrderDTOToOrder(OrderDTO orderDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<OrderDTO, Order> typeMap = modelMapper.typeMap(OrderDTO.class, Order.class);
+        typeMap.addMappings(mapper -> mapper.skip(Order::setSupplier))
+                .addMappings(mapper -> mapper.skip(Order::setCustomer));
+        Order mappedOrder = modelMapper.map(orderDTO, Order.class);
+        mappedOrder.getOrderDetailList().stream().forEach(od -> od.setOrder(mappedOrder));
+        return mappedOrder;
+    }
+
+    public static OrderDTO mapOrderToOrderDTO(Order order) {
+        return modelMapper.map(order, OrderDTO.class);
+    }
 }

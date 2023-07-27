@@ -62,10 +62,8 @@ public class User  {
     @OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL)
     private Set<UserRole> userRoleSet = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Order> orderList;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
 }
