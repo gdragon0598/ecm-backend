@@ -2,6 +2,7 @@ package com.huan.ecommerce.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,9 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Embeddable
 public class UserRoleId implements Serializable {
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Role role;
-
 }

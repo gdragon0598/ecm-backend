@@ -1,7 +1,7 @@
 package com.huan.ecommerce.dto;
 
+import com.huan.ecommerce.common.ValidOrderStatus;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -20,7 +20,7 @@ public class OrderDTO {
     @NotNull(message = "total amount must not be null")
     private Double totalAmount;
 
-    @NotBlank(message = "status must be set")
+    @ValidOrderStatus
     private String status;
 
     @NotNull(message = "user id must be set and not null in the request")

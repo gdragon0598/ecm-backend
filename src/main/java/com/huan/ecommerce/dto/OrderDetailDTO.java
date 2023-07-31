@@ -15,4 +15,7 @@ public class OrderDetailDTO {
 
     @NotNull(message = "productId must not be null")
     private Long productId;
+
+    @Null
+    private String imageUrl;
 }

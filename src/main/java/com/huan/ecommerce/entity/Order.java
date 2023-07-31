@@ -33,7 +33,9 @@ public class Order {
 
     @Column(name = "total_amount")
     private Double totalAmount;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
