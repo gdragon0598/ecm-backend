@@ -33,6 +33,7 @@ public class ProductService implements IProductService {
     private SupplierRepository supplierRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public ProductDTO findProductById(int id) {
         return EntityDTOMapper.mapProductToDTO(productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Product cannot be found: product ID " + id)));
     }
@@ -41,6 +42,7 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
         return productRepository.findAll(pageable).map(EntityDTOMapper::mapProductToDTO);
     }
@@ -54,6 +56,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ProductDTO> findProductByBrandId(Long brandId, Pageable pageable) {
         Page<ProductDTO> productCollection = productRepository.findProductsByBrandId(brandId.intValue(),pageable).map(EntityDTOMapper::mapProductToDTO);
         if (productCollection.getTotalElements() == 0) {
@@ -86,6 +89,7 @@ public class ProductService implements IProductService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ProductDTO> findProductByCategoryId(Long categoryId, Pageable pageable) {
         Page<ProductDTO> productCollection = productRepository.findProductsByCategoryId(categoryId.intValue(), pageable).map(EntityDTOMapper::mapProductToDTO);
         if (productCollection.getTotalElements() == 0) {
@@ -110,6 +114,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ProductDTO> findTopProductsBySale(Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "sale"));
         Page<ProductDTO> productDTOPage = productRepository.findAll(pageable).map(EntityDTOMapper::mapProductToDTO);
@@ -117,6 +122,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ProductDTO> findPageOfProductsIsNew(Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
         Page<ProductDTO> productDTOPage = productRepository.findProductsByIsNew(pageable).map(EntityDTOMapper::mapProductToDTO);

@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
-@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +17,9 @@ import java.sql.Timestamp;
         @AssociationOverride(name = "primaryKey.user",
                 joinColumns = @JoinColumn(name = "user_id")),
         @AssociationOverride(name = "primaryKey.role",
-                joinColumns = @JoinColumn(name = "role_id")) })
+                joinColumns = @JoinColumn(name = "role_id"))
+})
+@Data
 public class UserRole {
     @EmbeddedId
     private UserRoleId primaryKey = new UserRoleId();

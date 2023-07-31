@@ -17,6 +17,9 @@ public class Supplier extends User {
     private String contactNumber;
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier", fetch = FetchType.LAZY)
     private List<Product> productList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier", fetch = FetchType.LAZY)
+    private List<Order> orderList;
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -36,5 +37,5 @@ public class UserDTO  {
     private AddressDTO address;
 
     @NotEmpty(message = "User must have at least one role")
-    private List<Long> roleIdList;
+    private List<Long> roleIdList = new ArrayList<>();
 }

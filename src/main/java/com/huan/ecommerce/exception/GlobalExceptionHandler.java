@@ -40,4 +40,10 @@ public class GlobalExceptionHandler {
     public String handleEntityExistsException(EntityExistsException e) {
         return e.getMessage();
     }
+
+    @ExceptionHandler(ResourceConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleResourceConflicException(ResourceConflictException e) {
+        return e.getMessage();
+    }
 }

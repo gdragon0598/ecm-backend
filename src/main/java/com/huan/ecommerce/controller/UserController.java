@@ -1,6 +1,7 @@
 package com.huan.ecommerce.controller;
 
 import com.huan.ecommerce.dto.UserDTO;
+import com.huan.ecommerce.dto.UserRoleUpdateDTO;
 import com.huan.ecommerce.dto.UserUpdateDTO;
 import com.huan.ecommerce.service.IUserService;
 import jakarta.validation.Valid;
@@ -35,6 +36,11 @@ public class UserController {
             @RequestParam(value = "size", defaultValue = "5") int size
     ) {
         return userService.getPageOfUsers(PageRequest.of(page, size));
+    }
+
+    @PutMapping("/{userId}/role")
+    public UserDTO updateUserRole(@PathVariable int userId, @RequestBody @Valid UserRoleUpdateDTO userRoleUpdateDTO) {
+        return userService.updateUserRole(userId, userRoleUpdateDTO);
     }
 
 }

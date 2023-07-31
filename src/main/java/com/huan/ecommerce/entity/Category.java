@@ -33,7 +33,7 @@ public class Category {
     @Column(name = "updated_by")
     private Long updatedBy;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<Product> productList;

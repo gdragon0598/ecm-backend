@@ -1,6 +1,5 @@
 package com.huan.ecommerce.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,7 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -59,13 +57,10 @@ public class User  {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL)
-    private Set<UserRole> userRoleSet = new HashSet<>();
+    @OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+    private Set<UserRole> userRoleSet;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Order> orderList;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
 }

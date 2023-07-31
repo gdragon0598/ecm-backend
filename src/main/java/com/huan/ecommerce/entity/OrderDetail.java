@@ -1,20 +1,29 @@
 package com.huan.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-
+@Data
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer price;
     private Integer quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;
@@ -28,14 +37,4 @@ public class OrderDetail {
 
     @Column(name = "updated_by")
     private Long updatedBy;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    @JsonIgnore
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    @JsonIgnore
-    private Order order;
 }
