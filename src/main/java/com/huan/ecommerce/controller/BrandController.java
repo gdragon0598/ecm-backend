@@ -1,9 +1,7 @@
 package com.huan.ecommerce.controller;
 
 import com.huan.ecommerce.dto.BrandDTO;
-import com.huan.ecommerce.dto.CategoryDTO;
 import com.huan.ecommerce.service.IBrandService;
-import com.huan.ecommerce.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
