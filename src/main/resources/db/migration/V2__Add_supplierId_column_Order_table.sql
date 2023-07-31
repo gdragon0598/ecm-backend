@@ -1,0 +1,1 @@
+alter table "order" add column supplier_id integer not null references supplier(user_id);
