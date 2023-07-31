@@ -51,7 +51,7 @@ public class ProductController {
         return productDTOPage;
     }
     @GetMapping("/brand/{brandId}")
-    public Page<ProductDTO> getProductsByBrandId(
+    public Page<ProductDTO> getPageProductsByBrandId(
             @PathVariable Long brandId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -67,7 +67,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable Long id) {
         productService.deleteProductById(id);
     }
 

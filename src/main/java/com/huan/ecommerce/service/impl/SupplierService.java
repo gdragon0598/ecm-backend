@@ -6,6 +6,7 @@ import com.huan.ecommerce.service.ISupplierService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SupplierService implements ISupplierService {
@@ -20,6 +21,7 @@ public class SupplierService implements ISupplierService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public Supplier findSupplierById(Long id) {
         return supplierRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Supplier cannot be found: supplier ID " + id));
     }

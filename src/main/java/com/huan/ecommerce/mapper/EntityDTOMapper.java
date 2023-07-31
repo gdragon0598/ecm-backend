@@ -10,6 +10,11 @@ import org.modelmapper.convention.MatchingStrategies;
 public class EntityDTOMapper {
     private static final ModelMapper modelMapper = new ModelMapper();
     public static ProductDTO mapProductToDTO(Product entity) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<Product, ProductDTO> typeMap = modelMapper.typeMap(Product.class, ProductDTO.class);
+        typeMap.addMappings(mapper -> mapper.map(src -> src.getBrand().getId(), ProductDTO::setBrandId))
+                .addMappings(mapper -> mapper.map(src -> src.getCategory().getId(), ProductDTO::setCategoryId))
+                .addMappings(mapper -> mapper.map(src -> src.getSupplier().getId(), ProductDTO::setSupplierId));
         return modelMapper.map(entity, ProductDTO.class);
     }
     public static Product mapProductDTOToEntity(ProductDTO productDTO) {
@@ -25,7 +30,11 @@ public class EntityDTOMapper {
         return mappedProduct;
     }
     public static UserDTO mapUserToDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<User, UserDTO> typeMap = modelMapper.typeMap(User.class, UserDTO.class);
+        UserDTO mappedUserDTO = modelMapper.map(user, UserDTO.class);
+        mappedUserDTO.getRoleIdList().addAll(user.getUserRoleSet().stream().map(userRole -> userRole.getRole().getId()).toList());
+        return mappedUserDTO;
     }
 
     public static User mapUserDTOToUser(UserDTO userDTO) {
@@ -54,6 +63,13 @@ public class EntityDTOMapper {
     }
 
     public static OrderDTO mapOrderToOrderDTO(Order order) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        TypeMap<Order, OrderDTO> typeMap = modelMapper.typeMap(Order.class, OrderDTO.class);
+        typeMap.addMappings(mapper -> mapper.map(src -> src.getSupplier().getId(), OrderDTO::setSupplierId))
+                .addMappings(mapper -> mapper.map(src -> src.getCustomer().getId(), OrderDTO::setCustomerId));
+        TypeMap<OrderDetail, OrderDetailDTO> typeMap1 = modelMapper.typeMap(OrderDetail.class, OrderDetailDTO.class);
+        typeMap1.addMappings(mapper -> mapper.map(src -> src.getProduct().getId(), OrderDetailDTO::setProductId))
+                .addMappings(mapper -> mapper.map(src -> src.getProduct().getImageUrl(), OrderDetailDTO::setImageUrl));
         return modelMapper.map(order, OrderDTO.class);
     }
 }
