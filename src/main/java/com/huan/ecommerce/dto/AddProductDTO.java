@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class ProductDTO {
+public class AddProductDTO {
     private Long id;
 
     @NotBlank(message = "name must not be blank")
@@ -38,5 +38,6 @@ public class ProductDTO {
 
     @NotNull(message = "product detail must not be null")
     private ProductDetailDTO productDetail;
+
 
 }

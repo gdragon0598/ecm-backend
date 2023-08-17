@@ -17,6 +17,14 @@ import java.util.Set;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user", schema = "public")
+//@NamedEntityGraph(name = "user-address-role", attributeNodes = {
+//        @NamedAttributeNode("address"),
+//        @NamedAttributeNode(value = "userRoleSet", subgraph = "user-role")
+//},subgraphs = {
+//        @NamedSubgraph(name = "user-role", attributeNodes = @NamedAttributeNode(value = "primaryKey", subgraph = "roles")),
+//        @NamedSubgraph(name = "roles", attributeNodes = @NamedAttributeNode(value = "role"))
+//}
+//)
 public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,10 +65,13 @@ public class User  {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval=true)
+    @OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
     private Set<UserRole> userRoleSet;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
+    public String getFullName() {
+        return firstName + lastName;
+    }
 }

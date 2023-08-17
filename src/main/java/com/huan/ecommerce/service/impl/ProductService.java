@@ -1,6 +1,8 @@
 package com.huan.ecommerce.service.impl;
 
-import com.huan.ecommerce.dto.ProductDTO;
+import com.huan.ecommerce.dto.AddProductDTO;
+import com.huan.ecommerce.dto.DetailedProductDTO;
+import com.huan.ecommerce.dto.SimpleResponseProductDTO;
 import com.huan.ecommerce.entity.Product;
 import com.huan.ecommerce.mapper.EntityDTOMapper;
 import com.huan.ecommerce.repository.BrandRepository;
@@ -17,8 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 @Service
-public class ProductService implements IProductService {
+public class    ProductService implements IProductService {
+    @Autowired
+    private  EntityDTOMapper entityDTOMapper;
 
     @Autowired
     private ProductRepository productRepository;
@@ -34,8 +39,8 @@ public class ProductService implements IProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductDTO findProductById(int id) {
-        return EntityDTOMapper.mapProductToDTO(productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Product cannot be found: product ID " + id)));
+    public DetailedProductDTO findProductById(int id) {
+        return entityDTOMapper.mapProductToDetailedDTO(productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Product cannot be found: product ID " + id)));
     }
 
     /**
@@ -43,22 +48,22 @@ public class ProductService implements IProductService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable).map(EntityDTOMapper::mapProductToDTO);
+    public List<SimpleResponseProductDTO> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(entityDTOMapper::mapProductToSimpleResponseDTO).toList();
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public ProductDTO updateProductPrice(Long productId, double newPrice) {
+    public AddProductDTO updateProductPrice(Long productId, double newPrice) {
         Product updatedProduct = productRepository.findById(productId.intValue()).orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + productId));
         updatedProduct.setPrice(newPrice);
-        return EntityDTOMapper.mapProductToDTO(productRepository.save(updatedProduct));
+        return entityDTOMapper.mapProductToDTO(productRepository.save(updatedProduct));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findProductByBrandId(Long brandId, Pageable pageable) {
-        Page<ProductDTO> productCollection = productRepository.findProductsByBrandId(brandId.intValue(),pageable).map(EntityDTOMapper::mapProductToDTO);
+    public Page<SimpleResponseProductDTO> findProductByBrandId(Long brandId, Pageable pageable) {
+        Page<SimpleResponseProductDTO> productCollection = productRepository.findProductsByBrandId(brandId.intValue(),pageable).map(entityDTOMapper::mapProductToSimpleResponseDTO);
         if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such brand");
         }
@@ -67,21 +72,21 @@ public class ProductService implements IProductService {
 
     /**
      * @param id
-     * @param productDTO
+     * @param addProductDTO
      * @return
      */
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public ProductDTO updateProduct(Integer id, ProductDTO productDTO) {
+    public AddProductDTO updateProduct(Integer id, AddProductDTO addProductDTO) {
         Product updatedProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with ID: " + id));
-        updatedProduct.setPrice(productDTO.getPrice());
-        updatedProduct.setName(productDTO.getName());
-        updatedProduct.setSale(productDTO.getSale());
-        updatedProduct.setIsNew(productDTO.getIsNew());
-        updatedProduct.setNumberSoldItems(productDTO.getNumberSoldItems());
-        updatedProduct.setTotal(productDTO.getTotal());
-        updatedProduct.setImageUrl(productDTO.getImageUrl());
-        return EntityDTOMapper.mapProductToDTO(productRepository.save(updatedProduct));
+        updatedProduct.setPrice(addProductDTO.getPrice());
+        updatedProduct.setName(addProductDTO.getName());
+        updatedProduct.setSale(addProductDTO.getSale());
+        updatedProduct.setIsNew(addProductDTO.getIsNew());
+        updatedProduct.setNumberSoldItems(addProductDTO.getNumberSoldItems());
+        updatedProduct.setTotal(addProductDTO.getTotal());
+        updatedProduct.setImageUrl(addProductDTO.getImageUrl());
+        return entityDTOMapper.mapProductToDTO(productRepository.save(updatedProduct));
     }
 
     /**
@@ -90,8 +95,8 @@ public class ProductService implements IProductService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findProductByCategoryId(Long categoryId, Pageable pageable) {
-        Page<ProductDTO> productCollection = productRepository.findProductsByCategoryId(categoryId.intValue(), pageable).map(EntityDTOMapper::mapProductToDTO);
+    public Page<SimpleResponseProductDTO> findProductByCategoryId(Long categoryId, Pageable pageable) {
+        Page<SimpleResponseProductDTO> productCollection = productRepository.findProductsByCategoryId(categoryId.intValue(), pageable).map(entityDTOMapper::mapProductToSimpleResponseDTO);
         if (productCollection.getTotalElements() == 0) {
             throw new EntityNotFoundException("Cannot find any product, maybe there is no such category");
         }
@@ -104,28 +109,28 @@ public class ProductService implements IProductService {
      */
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public ProductDTO saveProduct(ProductDTO product) {
-        Product savedProduct = EntityDTOMapper.mapProductDTOToEntity(product);
+    public AddProductDTO saveProduct(AddProductDTO product) {
+        Product savedProduct = entityDTOMapper.mapProductDTOToEntity(product);
         savedProduct.setCategory(categoryRepository.findById(product.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("Category not found" + product.getCategoryId())));
         savedProduct.setBrand(brandRepository.findById(product.getBrandId()).orElseThrow(() -> new EntityNotFoundException("Brand not found" + product.getBrandId())));
         savedProduct.setSupplier(supplierRepository.findById(product.getSupplierId()).orElseThrow(() -> new EntityNotFoundException("Supplier not found" + product.getSupplierId())));
         savedProduct = productRepository.save(savedProduct);
-        return EntityDTOMapper.mapProductToDTO(savedProduct);
+        return entityDTOMapper.mapProductToDTO(savedProduct);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findTopProductsBySale(Pageable pageable) {
+    public Page<SimpleResponseProductDTO> findTopProductsBySale(Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "sale"));
-        Page<ProductDTO> productDTOPage = productRepository.findAll(pageable).map(EntityDTOMapper::mapProductToDTO);
+        Page<SimpleResponseProductDTO> productDTOPage = productRepository.findAll(pageable).map(entityDTOMapper::mapProductToSimpleResponseDTO);
         return productDTOPage;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findPageOfProductsIsNew(Pageable pageable) {
+    public List<SimpleResponseProductDTO> findPageOfProductsIsNew(Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
-        Page<ProductDTO> productDTOPage = productRepository.findProductsByIsNew(pageable).map(EntityDTOMapper::mapProductToDTO);
+        List<SimpleResponseProductDTO> productDTOPage = productRepository.findProductsByIsNew(pageable).map(entityDTOMapper::mapProductToSimpleResponseDTO).toList()   ;
         return productDTOPage;
     }
 

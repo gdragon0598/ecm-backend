@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 
@@ -33,6 +34,7 @@ public class UserRole {
     }
 
     @Transient
+    @Transactional
     public Role getRole() {
         return getPrimaryKey().getRole();
     }

@@ -1,0 +1,1 @@
+alter table comment add column parent_comment_id integer references comment(id);

@@ -9,3 +9,14 @@ spring:
   jpa:
     database: postgresql
     show-sql: true
+
+web:
+  cors:
+    allowed-origins: "http://localhost:4200"
+    allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+    max-age: 3600
+    allowed-headers: "Requestor-Type"
+    exposed-headers: "X-Get-Header"
+app:
+  jwt:
+    secret: "AC0VjStFUwMhfDWXf6XFaK5iUqQwZ2ucjA044PwozY2yRILSPdijnfSARyNQ9WnSMQBOU7uYqYbfVNJMnL+rCkS3N2L8iQxYfqnGtatYj1A7jRPm9Z2jgqMqU2ZwOLr8Ve8vbpWFTuUs9PG4nLLE2hIiRQwyV4yxA1Gs7v0ygI1oae4GjE1W4MIYKzPCFB1Ht4aIlDAZutt3u5ReSWiXqBBp7cNezTVQxLIuoQ==%"

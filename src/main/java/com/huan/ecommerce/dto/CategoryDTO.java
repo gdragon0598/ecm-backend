@@ -13,4 +13,6 @@ public class CategoryDTO {
 
     @NotNull(message = "description must not be null")
     private String description;
+
+    private String iconUrl;
 }

@@ -19,6 +19,7 @@ public class Category {
     private Long id;
     private String name;
     private String description;
+    private String iconUrl;
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;

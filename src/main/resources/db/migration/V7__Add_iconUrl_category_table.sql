@@ -1,0 +1,1 @@
+Alter table category add column icon_url text;

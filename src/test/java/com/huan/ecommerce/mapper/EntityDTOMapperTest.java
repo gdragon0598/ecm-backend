@@ -1,12 +1,13 @@
 package com.huan.ecommerce.mapper;
 
-import com.huan.ecommerce.dto.ProductDTO;
+import com.huan.ecommerce.dto.AddProductDTO;
 import com.huan.ecommerce.entity.Brand;
 import com.huan.ecommerce.entity.Category;
 import com.huan.ecommerce.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -21,8 +22,10 @@ class EntityDTOMapperTest {
     Product product;
 
     @Mock
-    ProductDTO productDTO;
+    AddProductDTO addProductDTO;
 
+    @Mock
+    EntityDTOMapper entityDTOMapper;
 
     public EntityDTOMapperTest() {
         MockitoAnnotations.openMocks(this);
@@ -41,21 +44,21 @@ class EntityDTOMapperTest {
        when(product.getSale()).thenReturn(Integer.valueOf(0));
 
 
-        when(productDTO.getName()).thenReturn("test");
-        when(productDTO.getCategoryId()).thenReturn(Long.valueOf(1));
-        when(productDTO.getBrandId()).thenReturn(Long.valueOf(1));
-        when(productDTO.getPrice()).thenReturn(Double.valueOf(1000));
-        when(productDTO.getImageUrl()).thenReturn("test url");
-        when(productDTO.getSale()).thenReturn(Integer.valueOf(0));
+        when(addProductDTO.getName()).thenReturn("test");
+        when(addProductDTO.getCategoryId()).thenReturn(Long.valueOf(1));
+        when(addProductDTO.getBrandId()).thenReturn(Long.valueOf(1));
+        when(addProductDTO.getPrice()).thenReturn(Double.valueOf(1000));
+        when(addProductDTO.getImageUrl()).thenReturn("test url");
+        when(addProductDTO.getSale()).thenReturn(Integer.valueOf(0));
 
-       ProductDTO actualProductDTO = EntityDTOMapper.mapProductToDTO(product);
+       AddProductDTO actualAddProductDTO = entityDTOMapper.mapProductToDTO(product);
 
-       assertEquals(productDTO.getSale(), actualProductDTO.getSale());
-        assertEquals(productDTO.getName(), actualProductDTO.getName());
-        assertEquals(productDTO.getPrice(), actualProductDTO.getPrice());
-        assertEquals(productDTO.getCategoryId(), actualProductDTO.getCategoryId());
-        assertEquals(productDTO.getBrandId(), actualProductDTO.getBrandId());
-        assertEquals(productDTO.getImageUrl(), actualProductDTO.getImageUrl());
+       assertEquals(addProductDTO.getSale(), actualAddProductDTO.getSale());
+        assertEquals(addProductDTO.getName(), actualAddProductDTO.getName());
+        assertEquals(addProductDTO.getPrice(), actualAddProductDTO.getPrice());
+        assertEquals(addProductDTO.getCategoryId(), actualAddProductDTO.getCategoryId());
+        assertEquals(addProductDTO.getBrandId(), actualAddProductDTO.getBrandId());
+        assertEquals(addProductDTO.getImageUrl(), actualAddProductDTO.getImageUrl());
     }
 
     @Test
@@ -72,14 +75,14 @@ class EntityDTOMapperTest {
         when(product.getSale()).thenReturn(Integer.valueOf(0));
 
 
-        when(productDTO.getName()).thenReturn("test");
-        when(productDTO.getCategoryId()).thenReturn(Long.valueOf(1));
-        when(productDTO.getBrandId()).thenReturn(Long.valueOf(1));
-        when(productDTO.getPrice()).thenReturn(Double.valueOf(1000));
-        when(productDTO.getImageUrl()).thenReturn("test url");
-        when(productDTO.getSale()).thenReturn(Integer.valueOf(0));
+        when(addProductDTO.getName()).thenReturn("test");
+        when(addProductDTO.getCategoryId()).thenReturn(Long.valueOf(1));
+        when(addProductDTO.getBrandId()).thenReturn(Long.valueOf(1));
+        when(addProductDTO.getPrice()).thenReturn(Double.valueOf(1000));
+        when(addProductDTO.getImageUrl()).thenReturn("test url");
+        when(addProductDTO.getSale()).thenReturn(Integer.valueOf(0));
 
-        Product actualProduct = EntityDTOMapper.mapProductDTOToEntity(productDTO);
+        Product actualProduct = entityDTOMapper.mapProductDTOToEntity(addProductDTO);
 
         assertEquals(product.getSale(), actualProduct.getSale());
         assertEquals(product.getName(), actualProduct.getName());
