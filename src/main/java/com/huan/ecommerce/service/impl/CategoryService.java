@@ -18,12 +18,15 @@ public class CategoryService implements ICategoryService {
     /**
      * @return
      */
+    @Autowired
+    private EntityDTOMapper entityDTOMapper;
+
     @Override
     @Transactional(readOnly = true)
     public Collection<CategoryDTO> findAll() {
         Collection<CategoryDTO> categoryDTOS = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                                                                 .parallelStream()
-                                                                .map(EntityDTOMapper::mapCategoryToDTO)
+                                                                .map(entityDTOMapper::mapCategoryToDTO)
                                                                 .toList();
         return categoryDTOS;
     }

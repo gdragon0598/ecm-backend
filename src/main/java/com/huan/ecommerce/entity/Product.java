@@ -49,6 +49,7 @@ public class Product {
     @Column(name = "number_sold_item")
     private Integer numberSoldItems;
     private Integer total;
+    private Float rating;
 
     @Column(name = "created_at",  nullable = false, updatable = false)
     @CreationTimestamp

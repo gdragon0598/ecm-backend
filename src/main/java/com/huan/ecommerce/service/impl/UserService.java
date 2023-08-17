@@ -1,9 +1,6 @@
 package com.huan.ecommerce.service.impl;
 
-import com.huan.ecommerce.dto.AddressDTO;
-import com.huan.ecommerce.dto.UserDTO;
-import com.huan.ecommerce.dto.UserRoleUpdateDTO;
-import com.huan.ecommerce.dto.UserUpdateDTO;
+import com.huan.ecommerce.dto.*;
 import com.huan.ecommerce.entity.Address;
 import com.huan.ecommerce.entity.Role;
 import com.huan.ecommerce.entity.User;
@@ -17,6 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +27,9 @@ import java.util.Set;
 @Service
 public class UserService implements IUserService {
     @Autowired
+    private EntityDTOMapper entityDTOMapper;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -36,10 +38,22 @@ public class UserService implements IUserService {
     @Autowired
     private UserRoleRepository userRoleRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Transactional(readOnly = true)
     public UserDTO findUserById(int id) {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("No user with the given id found " + id));
-        return EntityDTOMapper.mapUserToDTO(user);
+        return entityDTOMapper.mapUserToDTO(user);
+    }
+
+    /**
+     * @param email
+     * @return
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public User findUserByEmail(String email) {
+       return userRepository.findUserByEmail(email).orElse(null);
     }
 
     /**
@@ -48,21 +62,19 @@ public class UserService implements IUserService {
      */
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public UserDTO saveUser(UserDTO userDTO) {
-        User user = EntityDTOMapper.mapUserDTOToUser(userDTO);
-        List<Role> roleList = userDTO.getRoleIdList()
-                        .stream()
-                        .map(roleId -> roleRepository.findById(roleId).orElseThrow(() -> new EntityNotFoundException("There is no role with that id" + roleId))).toList();
-        List<UserRole> userRoleList = new ArrayList<>();
-        for (Role role : roleList) {
-            userRoleList.add(new UserRole());
-            userRoleList.get(userRoleList.size() - 1).setUser(user);
-            userRoleList.get(userRoleList.size() - 1).setRole(role);
-        }
-        Set<UserRole> userRoleSet = user.getUserRoleSet();
-        userRoleList.stream().forEach(userRole -> userRoleSet.add(userRole));
+    public UserDTO saveUser(RegisterDTO registerDTO) {
+        User user = entityDTOMapper.mapRegisterDTOToUser(registerDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Set<UserRole> userRoleSet  = new HashSet<>();
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(roleRepository.findByName("USER").orElseThrow(() -> new EntityNotFoundException("There is no role with that name")));
+
+        userRoleSet.add(userRole);
+        user.setUserRoleSet(userRoleSet);
         User savedUser = userRepository.save(user);
-        return EntityDTOMapper.mapUserToDTO(savedUser);
+        return entityDTOMapper.mapUserToDTO(savedUser);
     }
 
     /**
@@ -76,7 +88,7 @@ public class UserService implements IUserService {
         User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found user with given id"));
         updateUserBasicInfo(user,userUpdateDTO);
         user = userRepository.save(user);
-        return EntityDTOMapper.mapUserToDTO(user);
+        return entityDTOMapper.mapUserToDTO(user);
     }
 
     /**
@@ -85,7 +97,7 @@ public class UserService implements IUserService {
     @Override
     @Transactional(readOnly = true)
     public Page<UserDTO> getPageOfUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(EntityDTOMapper::mapUserToDTO);
+        return userRepository.findAll(pageable).map(entityDTOMapper::mapUserToDTO);
     }
 
     /**
@@ -107,7 +119,7 @@ public class UserService implements IUserService {
             newRole.setRole(role);
             userRoleSet.add(newRole);
         }
-        return EntityDTOMapper.mapUserToDTO(userRepository.save(user));
+        return entityDTOMapper.mapUserToDTO(userRepository.save(user));
     }
 
     private void updateUserBasicInfo(User user, UserUpdateDTO userUpdateDTO) {

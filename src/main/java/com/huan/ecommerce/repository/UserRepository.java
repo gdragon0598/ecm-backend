@@ -3,6 +3,7 @@ package com.huan.ecommerce.repository;
 import com.huan.ecommerce.entity.Customer;
 import com.huan.ecommerce.entity.Supplier;
 import com.huan.ecommerce.entity.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,5 +11,8 @@ import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Integer> {
+    @Query(value = "select u from User u join fetch u.address join fetch u.userRoleSet ur join fetch ur.primaryKey.role where u.email = :email")
+    Optional<User> findUserByEmailWithJoinFetch(String email);
 
+    Optional<User> findUserByEmail(String email);
 }
